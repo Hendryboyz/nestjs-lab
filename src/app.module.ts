@@ -4,7 +4,7 @@ import {
   MiddlewareConsumer,
   RequestMethod,
 } from '@nestjs/common';
-import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { logger } from './common/middleware/logger.middleware';
 import { CatsModule } from './cats/cats.module';
 import { CatsController } from './cats/cats.controller';
 
@@ -14,7 +14,7 @@ import { CatsController } from './cats/cats.controller';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(LoggerMiddleware)
+      .apply(logger)
       .exclude(
         { path: 'cats', method: RequestMethod.GET },
         { path: 'cat', method: RequestMethod.DELETE }
