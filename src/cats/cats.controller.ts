@@ -1,24 +1,24 @@
 import {
     Controller,
     Get,
-    Query,
     Post,
     Body,
     Put,
     Delete,
-    Req,
     Header,
     Param,
-    UseFilters,
+    ParseIntPipe,
+    UsePipes,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { CreateCatDto } from './dto/create-cat.dto';
+import { CreateCatDto, createCatSchema } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { ForbiddenException } from './forbidden.exception';
 import { spawn } from 'child_process';
 import { HttpExceptionFilter } from '../http-exception.filter';
+import { JoiValidationPipe } from '../joi-validation.pipe';
 
 @Controller('cats')
 export class CatsController {
@@ -26,12 +26,10 @@ export class CatsController {
 
     @Post()
     // @UseFilters(new HttpExceptionFilter())
+    @UsePipes(new JoiValidationPipe(createCatSchema))
     @Header('Cache-Control', 'none')
     async create(@Body() createCatDto: CreateCatDto): Promise<string> {
         console.log(createCatDto);
-        if (createCatDto.age > 20) {
-            throw new ForbiddenException();
-        }
         this.catService.create(createCatDto);
         return 'This action adds a new cat.';
     }
@@ -42,10 +40,11 @@ export class CatsController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string): string {
-        console.log();
+    findOne(@Param('id', ParseIntPipe) id: number): string {
+    // async findOne(@Query('id', ParseUUIDPipe) id: string): Promise<string>{
         return `This action returns the #${id} cat.`;
     }
+
 
     @Put(':id')
     update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {
