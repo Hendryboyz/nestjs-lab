@@ -8,7 +8,10 @@ import {
     Header,
     Param,
     ParseIntPipe,
+    Query,
     UsePipes,
+    ParseBoolPipe,
+    DefaultValuePipe,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateCatDto, createCatSchema } from './dto/create-cat.dto';
@@ -36,8 +39,11 @@ export class CatsController {
     }
 
     @Get()
-    async findAll(): Promise<Cat[]> {
-        return this.catService.findAll();
+    async findAll(
+        @Query('activeOnly', new DefaultValuePipe(false), ParseBoolPipe) activeOnly: boolean,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number
+    ): Promise<Cat[]> {
+        return this.catService.findAll({ activeOnly, page });
     }
 
     @Get(':id')
