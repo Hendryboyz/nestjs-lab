@@ -19,6 +19,7 @@ import { ForbiddenException } from './forbidden.exception';
 import { spawn } from 'child_process';
 import { HttpExceptionFilter } from '../http-exception.filter';
 import { JoiValidationPipe } from '../joi-validation.pipe';
+import { ValidationPipe } from '../validation.pipe';
 
 @Controller('cats')
 export class CatsController {
@@ -26,7 +27,7 @@ export class CatsController {
 
     @Post()
     // @UseFilters(new HttpExceptionFilter())
-    @UsePipes(new JoiValidationPipe(createCatSchema))
+    // @UsePipes(new JoiValidationPipe(createCatSchema))
     @Header('Cache-Control', 'none')
     async create(@Body() createCatDto: CreateCatDto): Promise<string> {
         console.log(createCatDto);

@@ -1,8 +1,15 @@
 import * as Joi from 'joi';
+// https://github.com/typestack/class-validator#usage
+import { IsString, IsInt, Min, Max } from 'class-validator';
 
 export class CreateCatDto {
+    @IsString()
     name: string;
+    @IsInt()
+    @Min(1)
+    @Max(20)
     age: number;
+    @IsString()
     breed: string;
 }
 
