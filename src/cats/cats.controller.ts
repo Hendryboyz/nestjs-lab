@@ -11,6 +11,7 @@ import {
     Query,
     UsePipes,
     UseGuards,
+    UseInterceptors,
     ParseBoolPipe,
     DefaultValuePipe,
     SetMetadata,
@@ -24,19 +25,22 @@ import { ForbiddenException } from './forbidden.exception';
 import { spawn } from 'child_process';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { LoggingInterceptor } from '../common/interceptors/logging.interceptor';
+import { TransformInterceptor } from '../common/interceptors/transform.interceptor';
 import { HttpExceptionFilter } from '../http-exception.filter';
 import { JoiValidationPipe } from '../common/pipes/joi-validation.pipe';
 import { ValidationPipe } from '../common/pipes/validation.pipe';
 
 @Controller('cats')
-// @UseGuards(RoleGuard/*, new RoleGuard()*/)
+// @UseGuards(RoleGuard/*new RoleGuard()*/)
+@UseInterceptors(LoggingInterceptor/*new LoggingInterceptor()*/)
 export class CatsController {
     constructor(private catService: CatsService) {}
 
     @Post()
     // @UseFilters(new HttpExceptionFilter())
     // @UsePipes(new JoiValidationPipe(createCatSchema))
-    @Roles('admin')
+    // @Roles('admin')
     @Header('Cache-Control', 'none')
     async create(@Body() createCatDto: CreateCatDto): Promise<string> {
         console.log(createCatDto);
@@ -45,6 +49,7 @@ export class CatsController {
     }
 
     @Get()
+    @UseInterceptors(TransformInterceptor)
     async findAll(
         @Query('activeOnly', new DefaultValuePipe(false), ParseBoolPipe) activeOnly: boolean,
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number
