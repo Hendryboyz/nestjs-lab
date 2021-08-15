@@ -21,8 +21,8 @@ import { Cat } from './interfaces/cat.interface';
 import { ForbiddenException } from './forbidden.exception';
 import { spawn } from 'child_process';
 import { HttpExceptionFilter } from '../http-exception.filter';
-import { JoiValidationPipe } from '../joi-validation.pipe';
-import { ValidationPipe } from '../validation.pipe';
+import { JoiValidationPipe } from '../common/pipes/joi-validation.pipe';
+import { ValidationPipe } from '../common/pipes/validation.pipe';
 
 @Controller('cats')
 export class CatsController {

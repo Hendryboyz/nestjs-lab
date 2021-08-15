@@ -8,7 +8,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { logger } from './common/middleware/logger.middleware';
 import { CatsModule } from './cats/cats.module';
 import { CatsController } from './cats/cats.controller';
-import { ValidationPipe } from './validation.pipe';
+import { ValidationPipe } from './common/pipes/validation.pipe';
 
 @Module({
   imports: [CatsModule],
