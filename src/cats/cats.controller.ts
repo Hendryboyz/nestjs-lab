@@ -14,6 +14,7 @@ import {
     UseInterceptors,
     ParseBoolPipe,
     DefaultValuePipe,
+    ValidationPipe,
     SetMetadata,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -29,7 +30,7 @@ import { LoggingInterceptor } from '../common/interceptors/logging.interceptor';
 import { TransformInterceptor } from '../common/interceptors/transform.interceptor';
 import { HttpExceptionFilter } from '../http-exception.filter';
 import { JoiValidationPipe } from '../common/pipes/joi-validation.pipe';
-import { ValidationPipe } from '../common/pipes/validation.pipe';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('cats')
 // @UseGuards(RoleGuard/*new RoleGuard()*/)
@@ -58,7 +59,10 @@ export class CatsController {
     }
 
     @Get(':id')
-    findOne(@Param('id', ParseIntPipe) id: number): string {
+    findOne(
+        // @User(new ValidationPipe({ validateCustomDecorators: true })) user: any,
+        @Param('id', ParseIntPipe) id: number
+    ): string {
     // async findOne(@Query('id', ParseUUIDPipe) id: string): Promise<string>{
         return `This action returns the #${id} cat.`;
     }
